@@ -46,7 +46,7 @@
           <td class="text-xs-left">{{ props.item.level}}</td>
           <td class="text-xs-left layout px-0">
             <h4><mdb-badge :color="props.item.status.color" style="margin-top: 10px;">{{props.item.status.msg}}</mdb-badge></h4>
-            <span @click="send(props.item)"><mdb-icon icon="times" size="2x" class="action action-delete"/></span>
+            <span @click="removeTrans(props.item)"><mdb-icon icon="times" size="2x" class="action action-delete"/></span>
           </td>
         </template>
       </v-data-table>
@@ -122,7 +122,7 @@
               <td class="text-xs-left">{{ props.item.level}}</td>
               <td class="text-xs-left">{{ props.item.email}}</td>
               <td class="text-xs-left layout px-0">
-                <span @click="send(props.item)"><mdb-icon icon="check" size="2x" class="action action-done"/></span>
+                <span @click="send(props.item)" v-if="props.item.id != school_id"><mdb-icon icon="check" size="2x" class="action action-done"/></span>
               </td>
             </template>
           </v-data-table>
@@ -369,6 +369,7 @@
         }
         axios.post('http://'+ this.$store.state.serverIp +':3000/api/transfer_requests',transferRequestData)
         .then(res => {
+          this.initialize()
           console.log(res);
         })
       },
@@ -381,7 +382,7 @@
           }
           axios.patch("http://"+ this.$store.state.serverIp +":3000/api/transfer_requests/" + item.id,{status: status})
           .then(res => {
-            console.log(res);
+            this.removeTrans(res.data)
           })
         })
       },
@@ -394,6 +395,15 @@
         .then(res => {
           console.log(res);
         })
+      },
+      removeTrans(item){
+        // console.log()
+        axios.delete('http://localhost:3000/api/transfer_requests/' + item.id)
+        .then(res => {
+          console.log(res)
+          this.initialize()
+        })
+
       },
       close () {
         this.dialog = false

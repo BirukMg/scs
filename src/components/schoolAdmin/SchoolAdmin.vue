@@ -82,7 +82,7 @@ export default {
       .catch(err => console.log(err))
     },
     notLog(){
-      if (this.$store.state.status == "logged out") {
+      if (!this.$store.getters.isLoggedIn) {
         this.$router.push('/')
       }
     }

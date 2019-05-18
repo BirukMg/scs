@@ -57,8 +57,9 @@ export default {
     }
   },
   beforeMount () {
-    // this.countRequest()
-    this.$store.dispatch('getRequest')
+    if (!this.$store.getters.isLoggedIn) {
+      this.$router.push('/')
+    }
   },
   methods: {
     logout(){
